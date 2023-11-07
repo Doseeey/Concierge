@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concierge</title>
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "fontawesome/css/all.css" %}">
+    {% block cssStyles %}
+    {% endblock cssStyles %}
+</head>
+<body>
+    {% block body %}
+    {% endblock body %}
+</body>
+<script src="{% static "jquery/jquery-3.7.1.min.js" %}"></script>
+{% block jsScripts %}
+{% endblock jsScripts %}
+</html>

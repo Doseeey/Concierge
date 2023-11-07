@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from ConciergeApp.views.RestaurantsViews import RestaurantsViews
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+urlpatterns.extend(RestaurantsViews.register())
