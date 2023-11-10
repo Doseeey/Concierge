@@ -1,0 +1,22 @@
+.main-page {
+    height: 450px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: multiply;
+    background-color: #bbb;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    padding-top: 100px;
+}
+
+.search_filter {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50px !important;
+}
+
+#search_button {
+    background-color: #fc0;
+    color: #000;
+    border-radius: 50px !important;
+}
