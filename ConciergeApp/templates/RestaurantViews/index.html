@@ -1,5 +1,79 @@
 {% extends "mainTemplate.html" %}
 
+{% block cssStyles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'RestaurantViews/css/restaurantViews.css' %}">    
+{% endblock cssStyles %}
+
 {% block body %}
-    INIT
+<div style="width: 350px; margin: 200px auto; color: #000;">
+  <h1 style="text-align: center">Dodaj restaurację</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="restaurantName" class="form-label">Nazwa restauracji</label>
+      <input type="text" class="form-control" id="restaurantName" name="restaurantName">
+    </div>
+    <div class="mb-3">
+      <label for="restaurantCity" class="form-label">Miasto</label>
+      <input type="text" class="form-control" id="restaurantCity" name="restaurantCity">
+    </div>
+    <div class="mb-3">
+        <label for="restaurantAddress" class="form-label">Adres</label>
+        <input type="text" class="form-control" id="restaurantAddress" name="restaurantAddress">
+    </div>
+    <div class="mb-3">
+        <label for="restaurantThumb" class="form-label">Thumbnail (tbd narazie recznie sciezke)</label>
+        <input type="text" class="form-control" id="restaurantThumb" name="restaurantThumb">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Godziny otwarcia</label>
+        <div class="d-flex justify-content-around">
+            <label for="restaurantFrom" class="form-label">Od:</label>
+            <label for="restaurantTo" class="form-label">Do:</label>
+        </div>
+        <div class="d-flex justify-content-around">
+            <div class="input-group input-group-lg hour_selector">
+                <select class="form-select search_filter rounded hour_selector" name="restaurantFrom" id="restaurantFrom">
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00" selected>10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                </select>
+            </div>
+            <div class="input-group input-group-lg hour_selector">
+                <select class="form-select search_filter rounded hour_selector" name="restaurantTo" id="restaurantTo">
+                    <option value="07:00">07:00</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00" selected>10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn submit-restaurant">Submit</button>
+  </form>
+</div>
 {% endblock body %}
