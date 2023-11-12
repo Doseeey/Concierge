@@ -26,7 +26,7 @@ class RestaurantsViews(View):
             post.review = 0  
             post.save()
             
-            return render(request, "RestaurantViews/search.html")
+            return render(request, "RestaurantViews/index.html")
 
         else:
             return render(request, "RestaurantViews/index.html")
