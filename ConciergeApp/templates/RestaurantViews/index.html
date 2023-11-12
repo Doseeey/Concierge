@@ -1,79 +1,94 @@
 {% extends "mainTemplate.html" %}
-
 {% block cssStyles %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'RestaurantViews/css/restaurantViews.css' %}">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"> 
 {% endblock cssStyles %}
 
 {% block body %}
-<div style="width: 350px; margin: 200px auto; color: #000;">
-  <h1 style="text-align: center">Dodaj restaurację</h1>
-  <form method="POST">
+<form method="post">
     {% csrf_token %}
-    <div class="mb-3">
-      <label for="restaurantName" class="form-label">Nazwa restauracji</label>
-      <input type="text" class="form-control" id="restaurantName" name="restaurantName">
-    </div>
-    <div class="mb-3">
-      <label for="restaurantCity" class="form-label">Miasto</label>
-      <input type="text" class="form-control" id="restaurantCity" name="restaurantCity">
-    </div>
-    <div class="mb-3">
-        <label for="restaurantAddress" class="form-label">Adres</label>
-        <input type="text" class="form-control" id="restaurantAddress" name="restaurantAddress">
-    </div>
-    <div class="mb-3">
-        <label for="restaurantThumb" class="form-label">Thumbnail (tbd narazie recznie sciezke)</label>
-        <input type="text" class="form-control" id="restaurantThumb" name="restaurantThumb">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Godziny otwarcia</label>
-        <div class="d-flex justify-content-around">
-            <label for="restaurantFrom" class="form-label">Od:</label>
-            <label for="restaurantTo" class="form-label">Do:</label>
-        </div>
-        <div class="d-flex justify-content-around">
-            <div class="input-group input-group-lg hour_selector">
-                <select class="form-select search_filter rounded hour_selector" name="restaurantFrom" id="restaurantFrom">
-                    <option value="07:00">07:00</option>
-                    <option value="08:00">08:00</option>
-                    <option value="09:00">09:00</option>
-                    <option value="10:00" selected>10:00</option>
-                    <option value="11:00">11:00</option>
-                    <option value="12:00">12:00</option>
-                    <option value="13:00">13:00</option>
-                    <option value="14:00">14:00</option>
-                    <option value="15:00">15:00</option>
-                    <option value="16:00">16:00</option>
-                    <option value="17:00">17:00</option>
-                    <option value="18:00">18:00</option>
-                    <option value="19:00">19:00</option>
-                    <option value="20:00">20:00</option>
-                    <option value="21:00">21:00</option>
-                </select>
+    <div class="filter-page" style="background-image: url('{% static "images/bg.jpg" %}');">
+        <div class="row justify-content-center g-3 mt-lg-0 mb-5 pb-lg-5">
+            <div class="col-auto">
+                <div class="input-group input-group-lg">
+                    <h1>Jakis ckliwy tekscik pyszne.pl</h1>
+                </div>
             </div>
-            <div class="input-group input-group-lg hour_selector">
-                <select class="form-select search_filter rounded hour_selector" name="restaurantTo" id="restaurantTo">
-                    <option value="07:00">07:00</option>
-                    <option value="08:00">08:00</option>
-                    <option value="09:00">09:00</option>
-                    <option value="10:00" selected>10:00</option>
-                    <option value="11:00">11:00</option>
-                    <option value="12:00">12:00</option>
-                    <option value="13:00">13:00</option>
-                    <option value="14:00">14:00</option>
-                    <option value="15:00">15:00</option>
-                    <option value="16:00">16:00</option>
-                    <option value="17:00">17:00</option>
-                    <option value="18:00">18:00</option>
-                    <option value="19:00">19:00</option>
-                    <option value="20:00">20:00</option>
-                    <option value="21:00">21:00</option>
-                </select>
+            <div class="w-100"></div>
+
+            <div class="col-6 col-lg-2" style="max-width: 150px;">
+                <div class="input-group input-group-lg text-center">
+                    {{ form.datepicker.errors }}
+                    {{ form.datepicker }}
+                </div>
             </div>
+
+            <div class="col-auto">
+                <div class="input-group input-group-lg">
+                    {{ form.time.errors }}
+                    {{ form.time }}
+                </div>
+            </div>
+
+            <div class="col-auto">
+                <div class="input-group input-group-lg">
+                    {{ form.numberOfGuests.errors }}
+                    {{ form.numberOfGuests }}
+                </div>
+            </div>
+
+            <div class="col-auto position-relative">
+                <div class="input-group input-group-lg">
+                    {{ form.name.errors }}
+                    {{ form.name }}
+                </div>
+            </div>
+
+            <div class="col-auto">
+                <input type="submit" class="btn btn-block btn-warning btn-lg py-2 px-5" value="Szukaj">
+            </div>
+
         </div>
     </div>
-    <button type="submit" class="btn submit-restaurant">Submit</button>
-  </form>
+</form>
+
+<div class="main-page">
+    <h1 class="proposed">Polecane restauracje</h1>
+    <div class="container">
+        
+        {% for restaurant in restaurants %}
+            {% if forloop.counter0|divisibleby:4  or forloop.counter == 1%}
+            <div class="row gx-5">
+            {% endif %}
+                <div class="col-lg-3 col-md-6 restaurant-entry">
+                    <div class="restaurant-card">
+                        <div class="image-container">
+                            <img src="{% static "images/bg.jpg" %}" class="restaurant-thumb">
+                            <div class="rate">{{ restaurant.review }} <i class="fa fa-solid fa-star"></i></div>
+                        </div>
+                        <h1 class="restaurant-name">{{ restaurant.name }}</h1>
+                        <h3 class="restaurant-address">{{ restaurant.city }}<br>{{ restaurant.address }}</h3>
+                        <div style="z-index: 1;" class="button-block">
+                            <a href="/{{ restaurant.name }}" class="btn btn-block btn-secondary btn-lg py-2 px-5" id="rest_button" role="button">Pokaż</a>
+                        </div>
+                    </div>
+                </div>
+        {% endfor %}
+
+      </div>
 </div>
 {% endblock body %}
+
+{% block jsScripts %}  
+    <script src="{% static "RestaurantViews/js/restaurantViews.js" %}"> 
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" 
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" 
+        crossorigin="anonymous"> 
+    </script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" 
+        integrity= "sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+        crossorigin="anonymous"> 
+    </script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script> 
+{% endblock jsScripts %}

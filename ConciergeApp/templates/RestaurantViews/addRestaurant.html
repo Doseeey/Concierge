@@ -1,0 +1,43 @@
+{% extends "mainTemplate.html" %}
+
+{% block cssStyles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'RestaurantViews/css/restaurantViews.css' %}">    
+{% endblock cssStyles %}
+
+{% block body %}
+<div style="width: 350px; margin: 200px auto; color: #000;">
+  <h1 style="text-align: center">Dodaj restaurację</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+        {% if not forloop.revcounter <= 2 %}
+            <div class="mb-3">
+                {{ field.errors }}
+                <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+            </div>            
+        {% endif %}
+    {% endfor %}
+    {% with openingHour=form.openingHour %}
+    {% with closingHour=form.closingHour %}
+        <div class="mb-3">
+            <div class="d-flex justify-content-between">
+                <label for="{{ openingHour.auto_id }}" class="form-label">{{ openingHour.label }}</label>
+                <label for="{{ closingHour.auto_id }}" class="form-label">{{ closingHour.label }}</label>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="input-group input-group-lg hour_selector">
+                    {{ openingHour }}
+                </div>
+                <div class="input-group input-group-lg hour_selector">
+                    {{ closingHour }}
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+    {% endwith %}
+    <input type="submit" value="Dodaj" class="btn btn-primary">
+  </form>
+</div>
+{% endblock body %}
