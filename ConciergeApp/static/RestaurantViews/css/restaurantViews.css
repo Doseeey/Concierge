@@ -78,6 +78,7 @@ td {
     background-color: #fc0;
     color: #000;
     border: none;
+    border-radius: 50px !important;
 }
 
 .submit-restaurant:hover {
@@ -143,6 +144,10 @@ td {
     background-color: #fc0;
     color: #000;
     border-radius: 50px !important;
+}
+
+.row {
+    margin-top: 25px;
 }
 
 .image-container {

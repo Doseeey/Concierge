@@ -46,7 +46,7 @@
             </div>
 
             <div class="col-auto">
-                <input type="submit" class="btn btn-block btn-warning btn-lg py-2 px-5" value="Szukaj">
+                <input type="submit" class="btn btn-block btn-warning btn-lg py-2 px-5 submit-restaurant" value="Szukaj">
             </div>
 
         </div>
@@ -58,6 +58,9 @@
     <div class="container">
         
         {% for restaurant in restaurants %}
+            {% if forloop.counter0|divisibleby:4 and forloop.counter != 1%}
+            </div>
+            {% endif %}
             {% if forloop.counter0|divisibleby:4  or forloop.counter == 1%}
             <div class="row gx-5">
             {% endif %}
@@ -75,13 +78,12 @@
                     </div>
                 </div>
         {% endfor %}
-
-      </div>
-</div>
+        </div>
+    </div>
 {% endblock body %}
 
 {% block jsScripts %}  
-    <script src="{% static "RestaurantViews/js/restaurantViews.js" %}"> 
+    <script src="{% static "RestaurantViews/js/restaurantViews.js" %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" 
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" 
         crossorigin="anonymous"> 
