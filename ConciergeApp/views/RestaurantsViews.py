@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import path
 
 from Concierge.libs.View import View
@@ -47,4 +47,5 @@ class RestaurantsViews(View):
 
     @staticmethod
     def viewSingleRestaurantMethod(request, restaurantId):
-        pass
+        viewSingleRestaurant = get_object_or_404(RestaurantModel, id=restaurantId)
+        return render(request, "RestaurantViews/singleRestaurant.html", {'restaurant': viewSingleRestaurant})

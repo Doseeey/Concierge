@@ -72,7 +72,7 @@
                         <h1 class="restaurant-name">{{ restaurant.name }}</h1>
                         <h3 class="restaurant-address">{{ restaurant.city }}<br>{{ restaurant.address }}</h3>
                         <div style="z-index: 1;" class="button-block">
-                            <a href="/{{ restaurant.name }}" class="btn btn-block btn-secondary btn-lg py-2 px-5" id="rest_button" role="button">Pokaż</a>
+                            <a href="{% url 'viewSingleRestaurant' restaurant.id %}" class="btn btn-block btn-secondary btn-lg py-2 px-5" id="rest_button" role="button">Pokaż</a>
                         </div>
                     </div>
                 </div>
