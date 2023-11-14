@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import path
 
 from Concierge.libs.View import View
@@ -19,17 +19,10 @@ class RestaurantsViews(View):
     @staticmethod
     def addRestaurantMethod(request):
         if request.method == 'POST':
-            form = AddRestaurantForm(request.POST)
+            form = AddRestaurantForm(request.POST, request.FILES)
             if form.is_valid():
-                post = RestaurantModel()
-                post.name = request.POST.get('restaurantName')
-                post.city = request.POST.get('restaurantCity')
-                post.address = request.POST.get('restaurantAddress')
-                post.photo_path = request.POST.get('restaurantThumb')
-                post.opening_hour = request.POST.get('restaurantFrom')
-                post.closing_hour = request.POST.get('restaurantTo')
-                post.review = 0  
-                post.save()
+                form.save()
+                return redirect("/")
         else:
             form = AddRestaurantForm()
         return render(request, "RestaurantViews/addRestaurant.html", {"form": form})

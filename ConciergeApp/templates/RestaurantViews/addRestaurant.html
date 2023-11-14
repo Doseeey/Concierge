@@ -8,7 +8,7 @@
 {% block body %}
 <div style="width: 350px; margin: 200px auto; color: #000;">
   <h1 style="text-align: center">Dodaj restaurację</h1>
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form %}
         {% if not forloop.revcounter <= 2 %}
@@ -19,8 +19,8 @@
             </div>            
         {% endif %}
     {% endfor %}
-    {% with openingHour=form.openingHour %}
-    {% with closingHour=form.closingHour %}
+    {% with openingHour=form.opening_hour %}
+    {% with closingHour=form.closing_hour %}
         <div class="mb-3">
             <div class="d-flex justify-content-between">
                 <label for="{{ openingHour.auto_id }}" class="form-label">{{ openingHour.label }}</label>
