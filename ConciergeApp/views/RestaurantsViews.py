@@ -32,15 +32,19 @@ class RestaurantsViews(View):
         if request.method == "POST":
             form = SearchRestaurantForm(request.POST)
             if form.is_valid():
-                pass
+                filterName = form.cleaned_data["name"]
+                if filterName:
+                    restaurantList = RestaurantModel.objects.filter(name=filterName)
+                else:
+                    restaurantList = RestaurantModel.objects.all() 
         else:
             form = SearchRestaurantForm()
-            
-        restaurantList = RestaurantModel.objects.all()
+            restaurantList = RestaurantModel.objects.all()
+        
         context = {'restaurants': restaurantList, "form": form}
 
         return render(request, "RestaurantViews/index.html", context)
-    
+
     @staticmethod
     def viewSingleRestaurantMethod(request, restaurantId):
         pass

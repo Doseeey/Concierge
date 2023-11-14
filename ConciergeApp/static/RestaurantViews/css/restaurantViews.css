@@ -144,6 +144,9 @@ td {
     background-color: #fc0;
     color: #000;
     border-radius: 50px !important;
+    text-align: center !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
 }
 
 .row {

@@ -56,7 +56,6 @@
 <div class="main-page">
     <h1 class="proposed">Polecane restauracje</h1>
     <div class="container">
-        
         {% for restaurant in restaurants %}
             {% if forloop.counter0|divisibleby:4 and forloop.counter != 1%}
             </div>
@@ -67,7 +66,7 @@
                 <div class="col-lg-3 col-md-6 restaurant-entry">
                     <div class="restaurant-card">
                         <div class="image-container">
-                            <img src="{% static "images/bg.jpg" %}" class="restaurant-thumb">
+                            <img src="{% static '' %}{{ restaurant.image }}" class="restaurant-thumb">
                             <div class="rate">{{ restaurant.review }} <i class="fa fa-solid fa-star"></i></div>
                         </div>
                         <h1 class="restaurant-name">{{ restaurant.name }}</h1>
