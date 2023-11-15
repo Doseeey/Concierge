@@ -4,8 +4,12 @@ from django.urls import path
 from Concierge.libs.View import View
 from ConciergeApp.forms.AddRestaurantForm import AddRestaurantForm
 from ConciergeApp.forms.SearchRestaurantForm import SearchRestaurantForm
+from ConciergeApp.forms.MakeReservationForm import MakeReservationForm
 from ConciergeApp.models.RestaurantModel import RestaurantModel
+from ConciergeApp.models.ReservationModel import ReservationModel
+from ConciergeApp.models.UserModel import UserModel
 
+import datetime
 
 class RestaurantsViews(View):
     @staticmethod
@@ -48,4 +52,32 @@ class RestaurantsViews(View):
     @staticmethod
     def viewSingleRestaurantMethod(request, restaurantId):
         viewSingleRestaurant = get_object_or_404(RestaurantModel, id=restaurantId)
-        return render(request, "RestaurantViews/singleRestaurant.html", {'restaurant': viewSingleRestaurant})
+        
+        if request.method == "POST":
+            form = MakeReservationForm(request.POST)
+            if form.is_valid():
+                #Mozna to zrobic jakos inteligentniej
+                reservation = ReservationModel()
+                date = form.cleaned_data["datepicker"]
+                hourFrom = form.cleaned_data["hourFrom"].split(":")
+                hourTo = form.cleaned_data["hourTo"].split(":")
+                
+                dateFrom = datetime.datetime(date.year, date.month, date.day, int(hourFrom[0]), int(hourFrom[1]))
+                dateTo = datetime.datetime(date.year, date.month, date.day, int(hourTo[0]), int(hourTo[1]))
+
+                #TEMPORARY JUST FOR TEST
+                user = UserModel.objects.all()[0]                
+
+                reservation.user = user
+                reservation.restaurant = viewSingleRestaurant
+                reservation.date_from = dateFrom
+                reservation.date_to = dateTo
+
+                reservation.save()
+
+        else:
+            form = MakeReservationForm()
+
+        context = {'restaurant': viewSingleRestaurant, 'form': form}
+
+        return render(request, "RestaurantViews/singleRestaurant.html", context)

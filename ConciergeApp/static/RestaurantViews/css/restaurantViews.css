@@ -166,3 +166,41 @@ td {
     font-size: 125%;
     color: #fc0;
 }
+
+.restaurant-view {
+    width: 80%;
+    margin: 0 10% !important;
+    color: #000 !important;
+}
+
+.reservation-form {
+    width: 95%;
+    margin: -175px 2.5% 0 2.5%;
+    background-color: #fff;
+    border-radius: 50px;
+    text-align: center;
+    padding: 20px;
+
+}
+
+.info-header {
+    text-align: center;
+}
+
+.info-text {
+    margin-top: 55px;
+}
+
+.info-rate {
+    color: #fc0;
+}
+
+.restaurant-image {
+    width: 90%;
+    margin: 10px 5%;
+    border-radius: 30px;
+}
+
+.reservation-block {
+    margin-top: 40px;
+}
