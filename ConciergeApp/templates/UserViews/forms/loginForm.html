@@ -1,0 +1,19 @@
+{% extends "mainTemplate.html" %}
+{% load static %} 
+
+{% block body %}
+<div style="width: 350px; margin: 200px auto; color: #000;">
+  <h1 style="text-align: center">Zaloguj się</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+            <div class="mb-3">
+                {{ field.errors }}
+                <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+            </div>
+    {% endfor %}
+    <input type="submit" value="Zaloguj" class="btn btn-primary">
+  </form>
+</div>
+{% endblock body %}

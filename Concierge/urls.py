@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import path
 
 from ConciergeApp.views.RestaurantsViews import RestaurantsViews
+from ConciergeApp.views.UserViews import UserViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
 urlpatterns.extend(RestaurantsViews.register())
+urlpatterns.extend(UserViews.register())

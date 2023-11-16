@@ -16,7 +16,7 @@ class RestaurantsViews(View):
     def register():
         return [
             path("restaurant/add", RestaurantsViews.addRestaurantMethod, name="addRestaurant"),
-            path("", RestaurantsViews.restaurantIndexMethod, name="restaurantSearch"),
+            path("", RestaurantsViews.restaurantIndexMethod, name="restaurantIndex"),
             path("restaurant/view/<int:restaurantId>", RestaurantsViews.viewSingleRestaurantMethod, name="viewSingleRestaurant")
         ]
         
@@ -26,10 +26,10 @@ class RestaurantsViews(View):
             form = AddRestaurantForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
-                return redirect("/")
+                return redirect("restaurantIndex")
         else:
             form = AddRestaurantForm()
-        return render(request, "RestaurantViews/addRestaurant.html", {"form": form})
+        return render(request, "RestaurantViews/addRestaurant.html", context=View.getContext({"form": form}))
     
     @staticmethod
     def restaurantIndexMethod(request):
@@ -47,7 +47,7 @@ class RestaurantsViews(View):
         
         context = {'restaurants': restaurantList, "form": form}
 
-        return render(request, "RestaurantViews/index.html", context)
+        return render(request, "RestaurantViews/index.html", context=View.getContext(context))
 
     @staticmethod
     def viewSingleRestaurantMethod(request, restaurantId):
@@ -80,4 +80,4 @@ class RestaurantsViews(View):
 
         context = {'restaurant': viewSingleRestaurant, 'form': form}
 
-        return render(request, "RestaurantViews/singleRestaurant.html", context)
+        return render(request, "RestaurantViews/singleRestaurant.html", context=View.getContext(context))
