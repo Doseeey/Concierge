@@ -7,11 +7,7 @@ from Concierge.libs.View import View
 
 from ConciergeApp.forms.LoginForm import LoginForm
 from ConciergeApp.forms.RegisterForm import RegisterForm
-from ConciergeApp.forms.ReviewForm import ReviewForm
 from ConciergeApp.models.UserModel import UserModel
-from ConciergeApp.models.ReservationModel import ReservationModel
-from ConciergeApp.models.RestaurantModel import RestaurantModel
-from ConciergeApp.views.ViewsUtils import ReservationDisplay
 
 class UserViews(View):
     @staticmethod
@@ -20,8 +16,6 @@ class UserViews(View):
             path("login", UserViews.loginMethod, name="login"),
             path("register", UserViews.registerMethod, name="register"),
             path("logout", UserViews.logoutMethod, name="logout"),
-            path("reservations", UserViews.userReservationsMethod, name="userReservations"),
-            path(r'^delete/(?P<reservation_id>[0-9]+)/$', UserViews.deleteReservation, name="deleteReservation")
         ]
         
     @staticmethod

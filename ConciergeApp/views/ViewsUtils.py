@@ -4,3 +4,4 @@ class ReservationDisplay:
     date = None
     timeFrom = None
     timeTo = None
+    grade = None

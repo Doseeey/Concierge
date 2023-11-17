@@ -17,3 +17,11 @@ table thead, table tbody {
     margin-left: 15px;
     font-size: 140%;
 }
+
+.info-rate {
+    color: #fc0;
+}
+
+.grade-text {
+    margin-top: 10px;
+}

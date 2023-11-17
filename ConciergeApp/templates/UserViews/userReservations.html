@@ -29,12 +29,17 @@
                 <td>{{ reservation.timeFrom }}</td>
                 <td>{{ reservation.timeTo }}</td>
                 <td>
-                    <a href="{% url 'deleteReservation' reservation_id=reservation.id %}" class="btn btn-outline-danger">Usuń rezerwacje</a>
+                    <a href="{% url 'deleteReservation' reservation_id=reservation.id %}" class="btn btn-outline-danger">Usuń rezerwacje</a><br>
+                    {% if reservation.grade != None %}
+                    <h5 class="grade-text">Twoja ocena: <span class="info-rate">{{ reservation.grade }} <i class="fa fa-solid fa-star"></i></span></h5>
+                    {% else %}
                     <form method="POST" style="margin-top: 10px;">
                         {% csrf_token %}
-                        <button type="button" class="btn btn-outline-warning">Oceń restauracje</button>                        
+                        <input type="hidden" name="id" value="{{ reservation.id }}">
+                        <button type="submit" class="btn btn-outline-warning">Oceń restauracje</button>                        
                         {{ form.grade }}
                     </form>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
