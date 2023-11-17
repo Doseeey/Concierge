@@ -11,18 +11,21 @@
 
 </div>
 <div class="row restaurant-view">
-    <div class="col-md-7 restaurant-info">
-        <h3 class="info-header">Zapraszamy do naszej restauracji</h3>
-        <h1 class="info-header">{{ restaurant.name }}</h1>
-        <div class="info-text">
-            <h3>Ocena: <span class="info-rate">{{ restaurant.review }} <i class="fa fa-solid fa-star"></i></span></h3>
-            Jesteśmy otwarci codziennie od {{ restaurant.opening_hour|time:"H:i" }} do {{ restaurant.closing_hour|time:"H:i" }}!<br>
-            Adres: {{ restaurant.city }}, {{ restaurant.address }}
+    <div class="col-md-7">
+        <div class="restaurant-info">
+            <h3 class="info-header">Zapraszamy do naszej restauracji</h3>
+            <h1 class="info-header">{{ restaurant.name }}</h1>
+            <div class="info-text">
+                <p class="restaurant-desc">{{ restaurant.description }}</p>
+                <h3>Ocena: <span class="info-rate">{{ restaurant.review }} <i class="fa fa-solid fa-star"></i></span></h3>
+                Jesteśmy otwarci codziennie od {{ restaurant.opening_hour|time:"H:i" }} do {{ restaurant.closing_hour|time:"H:i" }}!<br>
+                Adres: {{ restaurant.city }}, {{ restaurant.address }}
+            </div>
         </div>
     </div>
     <div class="col-md-5">
         <div class="reservation-form">
-            <h2 class="info-header">Zarezerwuj stolik:</h2>
+            <h2 class="reservation-header">Zarezerwuj stolik:</h2>
             <form method="post">
                 {% csrf_token %}
                 <div class="mb-3 reservation-block">
@@ -57,7 +60,12 @@
                     </div>
                 {% endwith %}
                 {% endwith %}
-                <input type="submit" class="btn btn-block btn-warning btn-lg py-2 px-5 submit-restaurant reservation-block" value="Zarezerwuj stolik">
+                {% if currentUser is not None %}
+                <input type="submit" class="btn btn-block btn-warning btn-lg py-2 px-5 submit-restaurant submit-block" value="Zarezerwuj stolik">
+                {% else %}
+                <p class="not-logged-reservation submit-block">Aby zarezerwować stolik, zaloguj się.</p>
+                <a href="{% url 'login' %}" class="btn btn-block btn-warning btn-lg py-2 px-5 submit-restaurant">Zaloguj się</a>
+                {% endif %}
             </form>
         </div>
     </div>

@@ -1,0 +1,44 @@
+{% extends "mainTemplate.html" %}
+
+{% block cssStyles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'RestaurantViews/css/alternateNav.css' %}">   
+    <link rel="stylesheet" href="{% static 'UserViews/css/userViews.css' %}">   
+{% endblock cssStyles %}
+
+{% block body %}
+<div class="reservation-block">
+    <h2 style="color: #000;">Moje rezerwacje:</h2>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa restauracji</th>
+            <th scope="col">Data</th>
+            <th scope="col">Od</th>
+            <th scope="col">Do</th>
+            <th scope="col">Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ reservation.restaurantName }}</td>
+                <td>{{ reservation.date }}</td>
+                <td>{{ reservation.timeFrom }}</td>
+                <td>{{ reservation.timeTo }}</td>
+                <td>
+                    <a href="{% url 'deleteReservation' reservation_id=reservation.id %}" class="btn btn-outline-danger">Usuń rezerwacje</a>
+                    <form method="POST" style="margin-top: 10px;">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-outline-warning">Oceń restauracje</button>                        
+                        {{ form.grade }}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>  
+</div>
+{% endblock body %}

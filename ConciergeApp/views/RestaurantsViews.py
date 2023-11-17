@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import path
 
+from django.apps import apps
 from Concierge.libs.View import View
 from ConciergeApp.forms.AddRestaurantForm import AddRestaurantForm
 from ConciergeApp.forms.SearchRestaurantForm import SearchRestaurantForm
@@ -65,15 +66,15 @@ class RestaurantsViews(View):
                 dateFrom = datetime.datetime(date.year, date.month, date.day, int(hourFrom[0]), int(hourFrom[1]))
                 dateTo = datetime.datetime(date.year, date.month, date.day, int(hourTo[0]), int(hourTo[1]))
 
-                #TEMPORARY JUST FOR TEST
-                user = UserModel.objects.all()[0]                
+                user = apps.get_app_config("ConciergeApp").currentUser
 
-                reservation.user = user
-                reservation.restaurant = viewSingleRestaurant
-                reservation.date_from = dateFrom
-                reservation.date_to = dateTo
+                if user != None:
+                    reservation.user = user
+                    reservation.restaurant = viewSingleRestaurant
+                    reservation.date_from = dateFrom
+                    reservation.date_to = dateTo
 
-                reservation.save()
+                    reservation.save()
 
         else:
             form = MakeReservationForm()

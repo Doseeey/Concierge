@@ -173,6 +173,10 @@ td {
     color: #000 !important;
 }
 
+.restaurant-info {
+    margin: -100px 0 0 0;
+}
+
 .reservation-form {
     width: 95%;
     margin: -175px 2.5% 0 2.5%;
@@ -184,11 +188,19 @@ td {
 }
 
 .info-header {
+    color: #fff;
+}
+
+.reservation-header {
     text-align: center;
 }
 
 .info-text {
     margin-top: 55px;
+}
+
+.restaurant-desc {
+    text-align: justify;
 }
 
 .info-rate {
@@ -203,4 +215,8 @@ td {
 
 .reservation-block {
     margin-top: 40px;
+}
+
+.submit-block {
+    margin-top: 20px;
 }

@@ -1,5 +1,9 @@
 {% extends "mainTemplate.html" %}
-{% load static %} 
+
+{% block cssStyles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'RestaurantViews/css/alternateNav.css' %}">   
+{% endblock cssStyles %}
 
 {% block body %}
 <div style="width: 350px; margin: 200px auto; color: #000;">

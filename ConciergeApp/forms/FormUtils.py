@@ -11,6 +11,13 @@ def makeHoursList():
         
     return result
 
+def makeGradeList():
+    result = []
+    for number in range(1, 6):
+        result.append((f"{number}", f"{number}"))
+    
+    return result
+
 def makeNumberOfGuestsList():
     result = []
     for number in range(1, 7):

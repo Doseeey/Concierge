@@ -23,6 +23,9 @@
               <a class="nav-item nav-link" style="color: #fff" href={% url "addRestaurant" %}>Dodaj restauracje (admin only)</a>
             </div>
             <div class="navbar-nav">
+              <a class="nav-item nav-link" style="color: #fff" href="{% url "userReservations" %}">Moje rezerwacje</a>
+            </div>
+            <div class="navbar-nav">
               <a class="nav-item nav-link" style="color: #fff" href="{% url "logout" %}">Wyloguj</a>
             </div>
           {% else %}

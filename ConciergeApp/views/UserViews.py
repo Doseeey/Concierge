@@ -6,8 +6,11 @@ from Concierge.libs.View import View
 
 from ConciergeApp.forms.LoginForm import LoginForm
 from ConciergeApp.forms.RegisterForm import RegisterForm
+from ConciergeApp.forms.ReviewForm import ReviewForm
 from ConciergeApp.models.UserModel import UserModel
-
+from ConciergeApp.models.ReservationModel import ReservationModel
+from ConciergeApp.models.RestaurantModel import RestaurantModel
+from ConciergeApp.views.ViewsUtils import ReservationDisplay
 
 class UserViews(View):
     @staticmethod
@@ -16,6 +19,8 @@ class UserViews(View):
             path("login", UserViews.loginMethod, name="login"),
             path("register", UserViews.registerMethod, name="register"),
             path("logout", UserViews.logoutMethod, name="logout"),
+            path("reservations", UserViews.userReservationsMethod, name="userReservations"),
+            path(r'^delete/(?P<reservation_id>[0-9]+)/$', UserViews.deleteReservation, name="deleteReservation")
         ]
         
     @staticmethod
@@ -54,3 +59,35 @@ class UserViews(View):
     def logoutMethod(request):
         apps.get_app_config("ConciergeApp").currentUser = None
         return redirect(reverse("restaurantIndex"))
+    
+    @staticmethod
+    def userReservationsMethod(request):
+        user = apps.get_app_config("ConciergeApp").currentUser
+
+        if user != None:
+            reservations = ReservationModel.objects.filter(user_id=user.id)
+
+            reservationsData = []
+            for reservation in reservations:
+                restaurantName = RestaurantModel.objects.get(id=reservation.restaurant_id).name
+
+                rd = ReservationDisplay()
+                rd.id = reservation.id
+                rd.restaurantName = restaurantName
+                rd.date = reservation.date_from.date().isoformat()
+                rd.timeFrom = reservation.date_from.time().isoformat()
+                rd.timeTo = reservation.date_to.time().isoformat()
+
+                reservationsData.append(rd)
+
+        form = ReviewForm()
+
+        context = {'reservations': reservationsData, 'form': form}
+
+        return render(request, "UserViews/userReservations.html", context=View.getContext(context))
+    
+    @staticmethod
+    def deleteReservation(request, reservation_id=None):
+        reservation = ReservationModel.objects.get(id=reservation_id)
+        reservation.delete()
+        return redirect("userReservations")

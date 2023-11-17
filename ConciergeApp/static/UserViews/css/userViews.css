@@ -1,0 +1,19 @@
+.reservation-block {
+    width: 60%;
+    margin: 150px auto;
+}
+
+table tr td, table tr th{
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+table thead, table tbody {
+    border-bottom: 1px solid #999;
+}
+
+.grade-input {
+    border: none;
+    background-color: inherit;
+    margin-left: 15px;
+    font-size: 140%;
+}
