@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from django.urls import reverse, path
 
 from django.apps import apps
@@ -27,16 +28,19 @@ class UserViews(View):
     def loginMethod(request):
         if request.method != "POST":
             form = LoginForm()
-        
-        form = LoginForm(request.POST)
-        
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+        else:
+            form = LoginForm(request.POST)
             
-            if UserModel.authenticate(username, password):
-                apps.get_app_config("ConciergeApp").currentUser = UserModel.objects.get(username=username)
-                return redirect(reverse("restaurantIndex"))
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                
+                try:
+                    UserModel.authenticate(username, password)
+                    UserModel.setUser(username)
+                    return redirect(reverse("restaurantIndex"))
+                except ValidationError as exc:
+                    form.add_error(field=None, error=exc)
             
         return render(request, "UserViews/forms/loginForm.html", context={"form": form})
     
@@ -44,50 +48,18 @@ class UserViews(View):
     def registerMethod(request):
         if request.method != "POST":
             form = RegisterForm()
-        
-        form = RegisterForm(request.POST)
-        
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            form.save()
-            apps.get_app_config("ConciergeApp").currentUser = UserModel.objects.get(username=username)
-            return redirect(reverse("restaurantIndex"))
+        else:
+            form = RegisterForm(request.POST)
+            
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                form.save()
+                UserModel.setUser(username)
+                return redirect(reverse("restaurantIndex"))
             
         return render(request, "UserViews/forms/registerForm.html", context={"form": form})
     
     @staticmethod
     def logoutMethod(request):
-        apps.get_app_config("ConciergeApp").currentUser = None
+        UserModel.cleanUser()
         return redirect(reverse("restaurantIndex"))
-    
-    @staticmethod
-    def userReservationsMethod(request):
-        user = apps.get_app_config("ConciergeApp").currentUser
-
-        if user != None:
-            reservations = ReservationModel.objects.filter(user_id=user.id)
-
-            reservationsData = []
-            for reservation in reservations:
-                restaurantName = RestaurantModel.objects.get(id=reservation.restaurant_id).name
-
-                rd = ReservationDisplay()
-                rd.id = reservation.id
-                rd.restaurantName = restaurantName
-                rd.date = reservation.date_from.date().isoformat()
-                rd.timeFrom = reservation.date_from.time().isoformat()
-                rd.timeTo = reservation.date_to.time().isoformat()
-
-                reservationsData.append(rd)
-
-        form = ReviewForm()
-
-        context = {'reservations': reservationsData, 'form': form}
-
-        return render(request, "UserViews/userReservations.html", context=View.getContext(context))
-    
-    @staticmethod
-    def deleteReservation(request, reservation_id=None):
-        reservation = ReservationModel.objects.get(id=reservation_id)
-        reservation.delete()
-        return redirect("userReservations")
