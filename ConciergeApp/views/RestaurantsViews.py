@@ -12,12 +12,14 @@ from ConciergeApp.models.ReviewModel import ReviewModel
 
 import datetime
 
+from ConciergeApp.models.UserModel import UserModel
+
 class RestaurantsViews(View):
     @staticmethod
     def register():
         return [
             path("restaurant/add", RestaurantsViews.addRestaurantMethod, name="addRestaurant"),
-            path("", RestaurantsViews.restaurantIndexMethod, name="restaurantIndex"),
+            path("", RestaurantsViews.indexMethod, name="index"),
             path("restaurant/view/<int:restaurantId>", RestaurantsViews.viewSingleRestaurantMethod, name="viewSingleRestaurant")
         ]
         
@@ -27,13 +29,15 @@ class RestaurantsViews(View):
             form = AddRestaurantForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
-                return redirect("restaurantIndex")
+                return redirect("index")
         else:
             form = AddRestaurantForm()
         return render(request, "RestaurantViews/addRestaurant.html", context=View.getContext({"form": form}))
     
     @staticmethod
-    def restaurantIndexMethod(request):
+    def indexMethod(request):
+        restaurantList = RestaurantModel.objects.all()
+        
         if request.method == "POST":
             form = SearchRestaurantForm(request.POST)
             if form.is_valid():
@@ -41,10 +45,9 @@ class RestaurantsViews(View):
                 if filterName:
                     restaurantList = RestaurantModel.objects.filter(name=filterName)
                 else:
-                    restaurantList = RestaurantModel.objects.all() 
+                    restaurantList = RestaurantModel.objects.all()                
         else:
             form = SearchRestaurantForm()
-            restaurantList = RestaurantModel.objects.all()
         
         context = {'restaurants': restaurantList, "form": form}
 
@@ -66,7 +69,7 @@ class RestaurantsViews(View):
                 dateFrom = datetime.datetime(date.year, date.month, date.day, int(hourFrom[0]), int(hourFrom[1]))
                 dateTo = datetime.datetime(date.year, date.month, date.day, int(hourTo[0]), int(hourTo[1]))
 
-                user = apps.get_app_config("ConciergeApp").currentUser
+                user = UserModel.getCurrentUser()
 
                 if user != None:
                     reservation.user = user

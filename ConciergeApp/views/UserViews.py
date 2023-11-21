@@ -32,7 +32,7 @@ class UserViews(View):
                 try:
                     UserModel.authenticate(username, password)
                     UserModel.setUser(username)
-                    return redirect(reverse("restaurantIndex"))
+                    return redirect(reverse("index"))
                 except ValidationError as exc:
                     form.add_error(field=None, error=exc)
             
@@ -49,11 +49,11 @@ class UserViews(View):
                 username = form.cleaned_data['username']
                 form.save()
                 UserModel.setUser(username)
-                return redirect(reverse("restaurantIndex"))
+                return redirect(reverse("index"))
             
         return render(request, "UserViews/forms/registerForm.html", context={"form": form})
     
     @staticmethod
     def logoutMethod(request):
         UserModel.cleanUser()
-        return redirect(reverse("restaurantIndex"))
+        return redirect(reverse("index"))

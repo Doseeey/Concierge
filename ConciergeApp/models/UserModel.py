@@ -28,3 +28,7 @@ class UserModel(models.Model):
     @staticmethod
     def cleanUser():
         apps.get_app_config("ConciergeApp").currentUser = None
+        
+    @staticmethod
+    def getCurrentUser():
+        return apps.get_app_config("ConciergeApp").currentUser

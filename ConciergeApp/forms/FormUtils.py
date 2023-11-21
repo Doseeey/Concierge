@@ -1,5 +1,23 @@
-from datetime import datetime, timedelta
+import datetime
 
+from django.forms import ValidationError
+
+def validateTodayDate(value):
+    if value < datetime.datetime.now().date():
+        raise ValidationError(
+            "Nie możesz wyszukać wolnych rezerwacji na dni, które już minęły",
+            params={"value": value}
+        )
+    
+def validateCurrentTime(value):
+    hour, minute = value.split(":")
+    time = datetime.time(int(hour), int(minute))
+    
+    if time <= datetime.datetime.now().time():
+        raise ValidationError(
+            "Nie możesz wyszukać wolnych rezerwacji na godziny, które już minęły",
+            params={"value": value}
+        )
 
 def makeHoursList():
     result = []
@@ -32,10 +50,10 @@ def makeNumberOfGuestsList():
 
 def findClosestReservationHour():
     quarters = [15, 30, 45, 60]
-    now = datetime.now()
+    now = datetime.datetime.now()
     minutes = now.minute
     closest = next(filter(lambda x: x > minutes, quarters))
     closestQuarterTimedelta = abs(closest - minutes)
-    delta = timedelta(minutes=closestQuarterTimedelta)
+    delta = datetime.timedelta(minutes=closestQuarterTimedelta)
     result = now + delta
     return f"{result.hour}:{result.minute}"

@@ -8,6 +8,7 @@ from ConciergeApp.forms.ReviewForm import ReviewForm
 from ConciergeApp.models.ReservationModel import ReservationModel
 from ConciergeApp.models.RestaurantModel import RestaurantModel
 from ConciergeApp.models.ReviewModel import ReviewModel
+from ConciergeApp.models.UserModel import UserModel
 from ConciergeApp.views.ViewsUtils import ReservationDisplay
 
 class ReservationsViews(View):
@@ -15,12 +16,12 @@ class ReservationsViews(View):
     def register():
         return [
             path("reservations", ReservationsViews.userReservationsMethod, name="userReservations"),
-            path(r'^delete/(?P<reservation_id>[0-9]+)/$', ReservationsViews.deleteReservationMethod, name="deleteReservation")
+            path('delete/<int:reservation_id>', ReservationsViews.deleteReservationMethod, name="deleteReservation")
         ]
         
     @staticmethod
     def userReservationsMethod(request):
-        user = apps.get_app_config("ConciergeApp").currentUser
+        user = UserModel.getCurrentUser()
 
         if user != None:
             reservations = ReservationModel.objects.filter(user_id=user.id)
@@ -39,6 +40,7 @@ class ReservationsViews(View):
                 try:
                     review = ReviewModel.objects.get(reservation_id=reservation.id)
                     rd.grade = review.grade
+                    rd.textReview = review.description
                 except ReviewModel.DoesNotExist:
                     review = None
                     rd.grade = review
