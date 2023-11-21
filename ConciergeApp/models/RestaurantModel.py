@@ -9,4 +9,5 @@ class RestaurantModel(models.Model):
     opening_hour = models.TimeField()
     closing_hour = models.TimeField()
     review = models.FloatField(default=0.0)
+    numberOfReviews = models.IntegerField(default=0)
     

@@ -8,7 +8,7 @@ from ConciergeApp.forms.SearchRestaurantForm import SearchRestaurantForm
 from ConciergeApp.forms.MakeReservationForm import MakeReservationForm
 from ConciergeApp.models.RestaurantModel import RestaurantModel
 from ConciergeApp.models.ReservationModel import ReservationModel
-from ConciergeApp.models.UserModel import UserModel
+from ConciergeApp.models.ReviewModel import ReviewModel
 
 import datetime
 
@@ -79,6 +79,15 @@ class RestaurantsViews(View):
         else:
             form = MakeReservationForm()
 
-        context = {'restaurant': viewSingleRestaurant, 'form': form}
+        reviews = []
+        reservations = ReservationModel.objects.filter(restaurant_id=restaurantId)
+        for reservation in reservations:
+            try:
+                review = ReviewModel.objects.get(reservation_id = reservation.id)
+            except:
+                continue
+            reviews.append(review)
+
+        context = {'restaurant': viewSingleRestaurant, 'form': form, 'reviews': reviews}
 
         return render(request, "RestaurantViews/singleRestaurant.html", context=View.getContext(context))

@@ -17,9 +17,20 @@
             <h1 class="info-header">{{ restaurant.name }}</h1>
             <div class="info-text">
                 <p class="restaurant-desc">{{ restaurant.description }}</p>
-                <h3>Ocena: <span class="info-rate">{{ restaurant.review }} <i class="fa fa-solid fa-star"></i></span></h3>
+                <h3>Ocena: <span class="info-rate">{{ restaurant.review|floatformat:1 }} <i class="fa fa-solid fa-star"></i></span></h3>
                 Jesteśmy otwarci codziennie od {{ restaurant.opening_hour|time:"H:i" }} do {{ restaurant.closing_hour|time:"H:i" }}!<br>
                 Adres: {{ restaurant.city }}, {{ restaurant.address }}
+            </div>
+            <div class="reviews">
+                Opinie o restauracji:<br>
+                {% for review in reviews %}
+                    <div class="review">
+                        <span class="review-author">{{ review.reservation.user.username }}</span> <br>
+                        <span class="review-text">"{{ review.description }}"</span>
+                    </div> 
+                {% empty %}
+                    Brak opinii o danej restauracji.    
+                {% endfor %}
             </div>
         </div>
     </div>

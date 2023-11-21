@@ -55,9 +55,18 @@ class ReservationsViews(View):
                     review = ReviewModel()
                     review.reservation = reservation
                     review.grade = int(form.cleaned_data["grade"])
-                    review.description = ""
+                    review.description = form.cleaned_data["review"]
 
                     review.save()
+
+                    restaurantId = reservation.restaurant.id
+                    restaurant = RestaurantModel.objects.get(id=restaurantId)
+                    oldGrade = restaurant.review
+                    noReviews = restaurant.numberOfReviews+1
+                    restaurant.numberOfReviews = noReviews
+                    restaurant.review = oldGrade + ((review.grade - oldGrade)/noReviews)
+                    restaurant.save()
+
                     return redirect("userReservations")
 
             context = {'reservations': reservationsData, 'form': form}
@@ -69,6 +78,22 @@ class ReservationsViews(View):
     
     @staticmethod
     def deleteReservationMethod(request, reservation_id=None):
+        reservation = ReservationModel.objects.get(id=reservation_id)
+        restaurantId = reservation.restaurant.id
+
+        restaurant = RestaurantModel.objects.get(id=restaurantId)
+        review = ReviewModel.objects.get(reservation_id=reservation_id)
+        oldGrade = restaurant.review
+        noReviews = restaurant.numberOfReviews-1
+        if noReviews != 0:
+            restaurant.numberOfReviews = noReviews
+            restaurant.review = oldGrade - ((review.grade - oldGrade)/noReviews)
+            restaurant.save()
+        else:
+            restaurant.numberOfReviews = 0
+            restaurant.review = 0.0
+            restaurant.save()
+
         reservation = ReservationModel.objects.get(id=reservation_id)
         reservation.delete()
         return redirect("userReservations")

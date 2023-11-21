@@ -37,7 +37,9 @@
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{ reservation.id }}">
                         <button type="submit" class="btn btn-outline-warning">Oceń restauracje</button>                        
-                        {{ form.grade }}
+                        {{ form.grade }} <br> 
+                        <label for="{{ form.review.auto_id }}" class="form-label">{{ form.review.label }}</label>
+                        {{ form.review }}
                     </form>
                     {% endif %}
                 </td>
@@ -47,3 +49,6 @@
       </table>  
 </div>
 {% endblock body %}
+
+{% block jsScripts %}
+{% endblock jsScripts %}
