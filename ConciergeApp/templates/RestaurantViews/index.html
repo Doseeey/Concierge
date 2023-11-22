@@ -20,28 +20,24 @@
             <div class="col-6 col-lg-2" style="max-width: 150px;">
                 <div class="input-group input-group-lg text-center">
                     {{ form.datepicker }}
-                    {{ form.datepicker.errors }}
                 </div>
             </div>
 
             <div class="col-auto">
                 <div class="input-group input-group-lg">
                     {{ form.time }}
-                    {{ form.time.errors }}
                 </div>
             </div>
 
             <div class="col-auto">
                 <div class="input-group input-group-lg">
                     {{ form.numberOfGuests }}
-                    {{ form.numberOfGuests.errors }}
                 </div>
             </div>
 
             <div class="col-auto position-relative">
                 <div class="input-group input-group-lg">
                     {{ form.name }}
-                    {{ form.name.errors }}
                 </div>
             </div>
 
@@ -76,10 +72,33 @@
                         </div>
                     </div>
                 </div>
+        {% empty %}
+        <div class="row text-black">
+            <div class="d-flex justify-content-center align-items-center">
+                <h3 class="d-block">Nie znaleziono żadnej restauracji.</h3>
+            </div>
+        </div>
         {% endfor %}
         </div>
     </div>
 {% endblock body %}
+{% block toasts %}
+    <div class="toasts-top-right" style="position: absolute; top:0; right:0;">
+        {% for field, errorText in form.errors.items %}
+            <div class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header justify-content-between" style="background-color: rgb(180,53,69);">
+                        <strong class="mr-auto">Błąd w formularzu</strong>
+                        <button type="button" data-dismiss="toast" type="button" class="ml-2 mb-1 close btn btn-tool" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                </div>
+                <div class="toast-body">{{ errorText }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock toasts %}
+
+
 
 {% block jsScripts %}  
     <script src="{% static "RestaurantViews/js/restaurantViews.js" %}"></script>

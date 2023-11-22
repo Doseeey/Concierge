@@ -1,7 +1,9 @@
+from django.forms import ValidationError
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import path
 
-from django.apps import apps
+from django.db.models import Q
+from django.db.models import Count
 from Concierge.libs.View import View
 from ConciergeApp.forms.AddRestaurantForm import AddRestaurantForm
 from ConciergeApp.forms.SearchRestaurantForm import SearchRestaurantForm
@@ -41,11 +43,21 @@ class RestaurantsViews(View):
         if request.method == "POST":
             form = SearchRestaurantForm(request.POST)
             if form.is_valid():
-                filterName = form.cleaned_data["name"]
-                if filterName:
-                    restaurantList = RestaurantModel.objects.filter(name=filterName)
-                else:
-                    restaurantList = RestaurantModel.objects.all()                
+                fields = form.clean()
+                bookedInSpecifiedTime = ReservationModel.objects\
+                    .filter(
+                        Q(date_from__lte=fields['combinedDatetime']) &
+                        Q(date_to__gte=fields['combinedDatetime'])
+                    )\
+                    .values("restaurant_id")\
+                    .annotate(reservationCount=Count('restaurant_id'))\
+                    .order_by()\
+                    .filter(reservationCount__gte=2)
+                notAvailableRestaurantIds = [query['restaurant_id'] for query in bookedInSpecifiedTime]
+                restaurantList = RestaurantModel.objects.filter(
+                    ~Q(id__in=notAvailableRestaurantIds) & 
+                    Q(name__icontains=fields['name'])
+                )
         else:
             form = SearchRestaurantForm()
         
@@ -55,29 +67,33 @@ class RestaurantsViews(View):
 
     @staticmethod
     def viewSingleRestaurantMethod(request, restaurantId):
-        viewSingleRestaurant = get_object_or_404(RestaurantModel, id=restaurantId)
+        restaurant = get_object_or_404(RestaurantModel, id=restaurantId)
         
         if request.method == "POST":
             form = MakeReservationForm(request.POST)
             if form.is_valid():
-                #Mozna to zrobic jakos inteligentniej
                 reservation = ReservationModel()
-                date = form.cleaned_data["datepicker"]
-                hourFrom = form.cleaned_data["hourFrom"].split(":")
-                hourTo = form.cleaned_data["hourTo"].split(":")
-                
-                dateFrom = datetime.datetime(date.year, date.month, date.day, int(hourFrom[0]), int(hourFrom[1]))
-                dateTo = datetime.datetime(date.year, date.month, date.day, int(hourTo[0]), int(hourTo[1]))
-
                 user = UserModel.getCurrentUser()
 
-                if user != None:
-                    reservation.user = user
-                    reservation.restaurant = viewSingleRestaurant
-                    reservation.date_from = dateFrom
-                    reservation.date_to = dateTo
-
-                    reservation.save()
+                startTime = form.cleaned_data['combinedDatetimeFrom'].time()
+                endTime = form.cleaned_data['combinedDatetimeTo'].time()
+                
+                if not(startTime >= restaurant.opening_hour and (endTime >= restaurant.opening_hour and endTime <= restaurant.closing_hour)):
+                    form.add_error("datepicker", ValidationError("Restauracja nie jest czynna w tych godzinach"))
+                
+                combinedDatetimeFrom: datetime.datetime = form.cleaned_data['combinedDatetimeFrom']
+                combinedDatetimeTo: datetime.datetime = form.cleaned_data['combinedDatetimeTo']
+                
+                bookings = ReservationModel.objects.filter(restaurant=restaurant)
+                collides = []
+                
+                # for booking in bookings:
+                #     if not (booking.date_from.date() != combinedDatetimeFrom.date() and booking.date_to.date() != combinedDatetimeTo.date()):
+                #         continue
+                #     if booking.date_from <= combinedDatetimeFrom and booking.date_to >= combinedDatetimeTo \
+                #         or booking.date_from >= combinedDatetimeFrom and booking.date_to <= combinedDatetimeTo\
+                #         or booking.date_from <= combinedDatetimeFrom and booking.date_to <= combinedDatetimeTo:
+                        
 
         else:
             form = MakeReservationForm()
@@ -91,6 +107,6 @@ class RestaurantsViews(View):
                 continue
             reviews.append(review)
 
-        context = {'restaurant': viewSingleRestaurant, 'form': form, 'reviews': reviews}
+        context = {'restaurant': restaurant, 'form': form, 'reviews': reviews}
 
         return render(request, "RestaurantViews/singleRestaurant.html", context=View.getContext(context))

@@ -12,6 +12,7 @@
     {% endblock cssStyles %}
 </head>
 <body>
+  <div class="wrapper">
     <nav class="navbar navbar-expand-lg navbar-light">
       <a class="navbar-brand logo" style="color: #fff" href="{% url "index" %}"><i class="fa fa-solid fa-utensils"></i> Concierge</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,8 +41,13 @@
     </nav>
     {% block body %}
     {% endblock body %}
+    </div>
+  </div>
+  {% block toasts %}
+  {% endblock toasts %}
 </body>
 <script src="{% static "jquery/jquery-3.7.1.min.js" %}"></script>
+<script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
 {% block jsScripts %}
 {% endblock jsScripts %}
 </html>
