@@ -10,6 +10,7 @@ from ConciergeApp.forms.RegisterForm import RegisterForm
 from ConciergeApp.models.UserModel import UserModel
 
 class UserViews(View):
+    PREVIOUS_URL = ""
     @staticmethod
     def register():
         return [
@@ -22,6 +23,7 @@ class UserViews(View):
     def loginMethod(request):
         if request.method != "POST":
             form = LoginForm()
+            UserViews.PREVIOUS_URL = request.META.get("HTTP_REFERER")
         else:
             form = LoginForm(request.POST)
             
@@ -32,7 +34,7 @@ class UserViews(View):
                 try:
                     UserModel.authenticate(username, password)
                     UserModel.setUser(username)
-                    return redirect(reverse("index"))
+                    return redirect(UserViews.PREVIOUS_URL)
                 except ValidationError as exc:
                     form.add_error(field=None, error=exc)
             

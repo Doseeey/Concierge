@@ -15,6 +15,7 @@ from ConciergeApp.models.ReviewModel import ReviewModel
 import datetime
 
 from ConciergeApp.models.UserModel import UserModel
+from ConciergeApp.objects.CollidesChecker import CollidesChecker
 
 class RestaurantsViews(View):
     @staticmethod
@@ -84,16 +85,28 @@ class RestaurantsViews(View):
                 combinedDatetimeFrom: datetime.datetime = form.cleaned_data['combinedDatetimeFrom']
                 combinedDatetimeTo: datetime.datetime = form.cleaned_data['combinedDatetimeTo']
                 
-                bookings = ReservationModel.objects.filter(restaurant=restaurant)
-                collides = []
+                bookings = ReservationModel.objects.filter(
+                    Q(restaurant=restaurant), 
+                    Q(date_from__date=combinedDatetimeFrom.date()) |
+                    Q(date_from__date=combinedDatetimeTo.date()) |
+                    Q(date_to__date=combinedDatetimeFrom.date())
+                )
                 
-                # for booking in bookings:
-                #     if not (booking.date_from.date() != combinedDatetimeFrom.date() and booking.date_to.date() != combinedDatetimeTo.date()):
-                #         continue
-                #     if booking.date_from <= combinedDatetimeFrom and booking.date_to >= combinedDatetimeTo \
-                #         or booking.date_from >= combinedDatetimeFrom and booking.date_to <= combinedDatetimeTo\
-                #         or booking.date_from <= combinedDatetimeFrom and booking.date_to <= combinedDatetimeTo:
-                        
+                modelToBook = ReservationModel()
+                modelToBook.user = user
+                modelToBook.restaurant = restaurant
+                modelToBook.date_from = combinedDatetimeFrom
+                modelToBook.date_to = combinedDatetimeTo
+                
+                if len(bookings) < 2:
+                    modelToBook.save()
+                    form.add_error("numberOfGuests", ValidationError("Udało zarezerwować się stolik w podanym terminie"))
+                else:
+                    collidesChecker = CollidesChecker(bookings, modelToBook)
+                    if collidesChecker.canBeBooked:
+                        modelToBook.save()
+                    else:
+                        form.add_error("datepicker", ValidationError("Nie można zarezerwować stolika w podanym czasie"))                        
 
         else:
             form = MakeReservationForm()

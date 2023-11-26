@@ -20,12 +20,15 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         {% if currentUser is not None %}
+          {% if currentUser.is_admin %}
             <div class="navbar-nav">
-              <a class="nav-item nav-link" style="color: #fff" href={% url "addRestaurant" %}>Dodaj restauracje (admin only)</a>
+              <a class="nav-item nav-link" style="color: #fff" href={% url "addRestaurant" %}>Dodaj restauracje</a>
             </div>
+          {% else %}
             <div class="navbar-nav">
               <a class="nav-item nav-link" style="color: #fff" href="{% url "userReservations" %}">Moje rezerwacje</a>
             </div>
+          {% endif %}
             <div class="navbar-nav">
               <a class="nav-item nav-link" style="color: #fff" href="{% url "logout" %}">Wyloguj</a>
             </div>

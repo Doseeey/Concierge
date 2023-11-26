@@ -33,4 +33,7 @@ class MakeReservationForm(forms.Form):
         if self.cleaned_data['combinedDatetimeFrom'] < now:
             self.add_error("datepicker", forms.ValidationError("Nie możesz rezerwacji na datę wcześniejszą niż obecna"))
             return False
+        if self.cleaned_data['combinedDatetimeFrom'] >= self.cleaned_data['combinedDatetimeTo']:
+            self.add_error("datepicker", forms.ValidationError("Niepoprawne godziny rezerwacji"))
+            return False
         return True
