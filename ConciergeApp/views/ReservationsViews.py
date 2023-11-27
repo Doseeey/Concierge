@@ -2,6 +2,7 @@ from django.urls import path
 
 from django.apps import apps
 from django.shortcuts import redirect, render
+from django.core.exceptions import ObjectDoesNotExist
 from Concierge.libs.View import View
 
 from ConciergeApp.forms.ReviewForm import ReviewForm
@@ -81,21 +82,22 @@ class ReservationsViews(View):
     @staticmethod
     def deleteReservationMethod(request, reservation_id=None):
         reservation = ReservationModel.objects.get(id=reservation_id)
-        restaurantId = reservation.restaurant.id
+        restaurant = reservation.restaurant
+        
+        try:
+            review = ReviewModel.objects.get(reservation_id=reservation_id)
+            oldGrade = restaurant.review
+            noReviews = restaurant.numberOfReviews-1
+            if noReviews != 0:
+                restaurant.numberOfReviews = noReviews
+                restaurant.review = oldGrade - ((review.grade - oldGrade)/noReviews)
+                restaurant.save()
+            else:
+                restaurant.numberOfReviews = 0
+                restaurant.review = 0.0
+                restaurant.save()
+        except ObjectDoesNotExist:
+            pass
 
-        restaurant = RestaurantModel.objects.get(id=restaurantId)
-        review = ReviewModel.objects.get(reservation_id=reservation_id)
-        oldGrade = restaurant.review
-        noReviews = restaurant.numberOfReviews-1
-        if noReviews != 0:
-            restaurant.numberOfReviews = noReviews
-            restaurant.review = oldGrade - ((review.grade - oldGrade)/noReviews)
-            restaurant.save()
-        else:
-            restaurant.numberOfReviews = 0
-            restaurant.review = 0.0
-            restaurant.save()
-
-        reservation = ReservationModel.objects.get(id=reservation_id)
         reservation.delete()
         return redirect("userReservations")

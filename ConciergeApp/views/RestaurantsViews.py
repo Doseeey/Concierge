@@ -81,32 +81,33 @@ class RestaurantsViews(View):
                 
                 if not(startTime >= restaurant.opening_hour and (endTime >= restaurant.opening_hour and endTime <= restaurant.closing_hour)):
                     form.add_error("datepicker", ValidationError("Restauracja nie jest czynna w tych godzinach"))
-                
-                combinedDatetimeFrom: datetime.datetime = form.cleaned_data['combinedDatetimeFrom']
-                combinedDatetimeTo: datetime.datetime = form.cleaned_data['combinedDatetimeTo']
-                
-                bookings = ReservationModel.objects.filter(
-                    Q(restaurant=restaurant), 
-                    Q(date_from__date=combinedDatetimeFrom.date()) |
-                    Q(date_from__date=combinedDatetimeTo.date()) |
-                    Q(date_to__date=combinedDatetimeFrom.date())
-                )
-                
-                modelToBook = ReservationModel()
-                modelToBook.user = user
-                modelToBook.restaurant = restaurant
-                modelToBook.date_from = combinedDatetimeFrom
-                modelToBook.date_to = combinedDatetimeTo
-                
-                if len(bookings) < 2:
-                    modelToBook.save()
-                    form.add_error("numberOfGuests", ValidationError("Udało zarezerwować się stolik w podanym terminie"))
                 else:
-                    collidesChecker = CollidesChecker(bookings, modelToBook)
-                    if collidesChecker.canBeBooked:
+                    combinedDatetimeFrom: datetime.datetime = form.cleaned_data['combinedDatetimeFrom']
+                    combinedDatetimeTo: datetime.datetime = form.cleaned_data['combinedDatetimeTo']
+                    
+                    bookings = ReservationModel.objects.filter(
+                        Q(restaurant=restaurant), 
+                        Q(date_from__date=combinedDatetimeFrom.date()) |
+                        Q(date_from__date=combinedDatetimeTo.date()) |
+                        Q(date_to__date=combinedDatetimeFrom.date())
+                    )
+                    
+                    modelToBook = ReservationModel()
+                    modelToBook.user = user
+                    modelToBook.restaurant = restaurant
+                    modelToBook.date_from = combinedDatetimeFrom
+                    modelToBook.date_to = combinedDatetimeTo
+                    
+                    if len(bookings) < 2:
                         modelToBook.save()
+                        form.add_error("numberOfGuests", ValidationError("Udało zarezerwować się stolik w podanym terminie"))
                     else:
-                        form.add_error("datepicker", ValidationError("Nie można zarezerwować stolika w podanym czasie"))                        
+                        collidesChecker = CollidesChecker(bookings, modelToBook)
+                        if collidesChecker.canBeBooked:
+                            modelToBook.save()
+                            form.add_error("numberOfGuests", ValidationError("Udało zarezerwować się stolik w podanym terminie"))
+                        else:
+                            form.add_error("datepicker", ValidationError("Nie można zarezerwować stolika w podanym czasie"))                        
 
         else:
             form = MakeReservationForm()
