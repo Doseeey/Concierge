@@ -1,3 +1,4 @@
+import datetime
 from django.urls import path
 
 from django.apps import apps
@@ -35,8 +36,8 @@ class ReservationsViews(View):
                 rd.id = reservation.id
                 rd.restaurantName = restaurantName
                 rd.date = reservation.date_from.date().isoformat()
-                rd.timeFrom = reservation.date_from.time().isoformat()
-                rd.timeTo = reservation.date_to.time().isoformat()
+                rd.timeFrom = (reservation.date_from + datetime.timedelta(hours=1)).time().isoformat()
+                rd.timeTo = (reservation.date_to + datetime.timedelta(hours=1)).time().isoformat()
 
                 try:
                     review = ReviewModel.objects.get(reservation_id=reservation.id)

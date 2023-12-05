@@ -9,7 +9,7 @@ class UserModel(models.Model):
     username = models.CharField(max_length=255)
     email = models.EmailField()
     password = models.CharField(max_length=32)
-    is_admin = models.BooleanField()
+    is_admin = models.BooleanField(default=False)
     
     @staticmethod
     def authenticate(username, password):
