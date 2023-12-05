@@ -78,6 +78,7 @@ td {
     background-color: #fc0;
     color: #000;
     border: none;
+    border-radius: 50px !important;
 }
 
 .submit-restaurant:hover {
@@ -143,6 +144,13 @@ td {
     background-color: #fc0;
     color: #000;
     border-radius: 50px !important;
+    text-align: center !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+.row {
+    margin-top: 25px;
 }
 
 .image-container {
@@ -157,4 +165,74 @@ td {
     font-weight: bold;
     font-size: 125%;
     color: #fc0;
+}
+
+.restaurant-view {
+    width: 80%;
+    margin: 0 10% !important;
+    color: #000 !important;
+}
+
+.restaurant-info {
+    margin: -100px 0 0 0;
+}
+
+.reservation-form {
+    width: 95%;
+    margin: -175px 2.5% 0 2.5%;
+    background-color: #fff;
+    border-radius: 50px;
+    text-align: center;
+    padding: 20px;
+
+}
+
+.info-header {
+    color: #fff;
+}
+
+.reservation-header {
+    text-align: center;
+}
+
+.info-text {
+    margin-top: 55px;
+}
+
+.restaurant-desc {
+    text-align: justify;
+}
+
+.info-rate {
+    color: #fc0;
+}
+
+.restaurant-image {
+    width: 90%;
+    margin: 10px 5%;
+    border-radius: 30px;
+}
+
+.reservation-block {
+    margin-top: 40px;
+}
+
+.submit-block {
+    margin-top: 20px;
+}
+
+.review {
+    background-color: #fff;
+    border-radius: 50px;
+    padding: 15px 25px;
+    margin: 15px 0;
+    width: auto !important;
+}
+
+.review-author {
+    font-weight: bold !important;
+}
+
+.review-text {
+    padding-left: 25px;
 }

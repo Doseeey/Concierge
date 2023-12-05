@@ -1,0 +1,74 @@
+{% extends "mainTemplate.html" %}
+
+{% block cssStyles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'RestaurantViews/css/alternateNav.css' %}">   
+    <link rel="stylesheet" href="{% static 'UserViews/css/userViews.css' %}">   
+{% endblock cssStyles %}
+
+{% block body %}
+<div class="reservation-block">
+    <h2 style="color: #000;">Moje rezerwacje:</h2>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa restauracji</th>
+            <th scope="col">Data</th>
+            <th scope="col">Od</th>
+            <th scope="col">Do</th>
+            <th scope="col">Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+            <tr expanded='false'>
+                <th scope="row">
+                    {{ forloop.counter }}
+                    <button class="btn btn-tool expandRowBtn" type="button" title="Rozwiń formularz oceny">
+                        <i class="fa fa-solid fa-sort-down"></i>
+                    </button>
+                </th>
+                <td>{{ reservation.restaurantName }}</td>
+                <td>{{ reservation.date }}</td>
+                <td>{{ reservation.timeFrom }}</td>
+                <td>{{ reservation.timeTo }}</td>
+                <td>
+                    <a href="{% url 'deleteReservation' reservation_id=reservation.id %}" class="btn btn-outline-danger">Usuń rezerwacje</a><br>
+                    {% if reservation.grade != None %}
+                    <h5 class="grade-text">Twoja ocena: <span class="info-rate">{{ reservation.grade }} <i class="fa fa-solid fa-star"></i></span></h5>
+                    <tr class="d-none">
+                        <td colspan="6">
+                            {% if reservation.textReview|length > 0 %}
+                                {{ reservation.textReview }}
+                            {% else %}
+                                Nie zostawiłeś żadnej pisemnej opinii
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr class="d-none">
+                        <td colspan="6">
+                            <form method="POST" style="margin-top: 10px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ reservation.id }}">
+                                <button type="submit" class="btn btn-outline-warning">Oceń restauracje</button>                        
+                                {{ form.grade }} <br> 
+                                <label for="{{ form.review.auto_id }}" class="form-label">{{ form.review.label }}</label>
+                                {{ form.review }}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>  
+</div>
+{% endblock body %}
+
+{% block jsScripts %}
+    <script src="{% static 'UserViews/js/expandButton.js' %}"></script>
+{% endblock jsScripts %}
+

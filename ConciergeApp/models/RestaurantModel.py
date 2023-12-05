@@ -4,8 +4,10 @@ class RestaurantModel(models.Model):
     name = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    photo_path = models.CharField(max_length=255)
+    image = models.ImageField(blank=True, null=True, upload_to="images/restaurants/")
+    description = models.TextField(blank=True, null=True)
     opening_hour = models.TimeField()
     closing_hour = models.TimeField()
-    review = models.FloatField()
+    review = models.FloatField(default=0.0)
+    numberOfReviews = models.IntegerField(default=0)
     

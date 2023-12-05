@@ -1,0 +1,25 @@
+{% extends "mainTemplate.html" %}
+
+{% block cssStyles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'RestaurantViews/css/alternateNav.css' %}">   
+{% endblock cssStyles %}
+
+{% block body %}
+<div style="width: 350px; margin: 200px auto; color: #000;">
+  <h1 style="text-align: center">Zarejestruj się</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% for error in field.errors %}
+                <span class="error text-danger">{{ error }}</span>
+              {% endfor %}
+            </div>
+    {% endfor %}
+    <input type="submit" value="Zarejestruj" class="btn btn-primary">
+  </form>
+</div>
+{% endblock body %}

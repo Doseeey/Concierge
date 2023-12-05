@@ -12,27 +12,45 @@
     {% endblock cssStyles %}
 </head>
 <body>
+  <div class="wrapper">
     <nav class="navbar navbar-expand-lg navbar-light">
-      <a class="navbar-brand logo" style="color: #fff" href="/"><i class="fa fa-solid fa-utensils"></i> Concierge</a>
+      <a class="navbar-brand logo" style="color: #fff" href="{% url "index" %}"><i class="fa fa-solid fa-utensils"></i> Concierge</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-item nav-link" style="color: #fff" href="#">Logowanie</a>
-        </div>
-        <div class="navbar-nav">
-          <a class="nav-item nav-link" style="color: #fff" href="/restaurant/add">Dodaj restauracje (admin only)</a>
-        </div>
+        {% if currentUser is not None %}
+          {% if currentUser.is_admin %}
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" style="color: #fff" href={% url "addRestaurant" %}>Dodaj restauracje</a>
+            </div>
+          {% else %}
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" style="color: #fff" href="{% url "userReservations" %}">Moje rezerwacje</a>
+            </div>
+          {% endif %}
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" style="color: #fff" href="{% url "logout" %}">Wyloguj</a>
+            </div>
+          {% else %}
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" style="color: #fff" href="{% url "login" %}">Logowanie</a>
+            </div>
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" style="color: #fff" href="{% url "register" %}">Rejestracja</a>
+            </div>
+        {% endif %}
       </div>
     </nav>
     {% block body %}
     {% endblock body %}
-    <footer>
-        Footer TBD
-    </footer>
+    </div>
+  </div>
+  {% block toasts %}
+  {% endblock toasts %}
 </body>
 <script src="{% static "jquery/jquery-3.7.1.min.js" %}"></script>
+<script src="{% static "bootstrap/js/bootstrap.js" %}"></script>
 {% block jsScripts %}
 {% endblock jsScripts %}
 </html>
